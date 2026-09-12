@@ -1,0 +1,12 @@
+# secrets / auth
+*auth*.json
+*cookies*
+*.pem
+.env
+.env.*
+# os / editor
+.DS_Store
+node_modules/
+# downloaded media
+*.ts
+*.mp4

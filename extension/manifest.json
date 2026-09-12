@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "ダイレクトアカデミー 講座ダウンローダー",
+  "version": "0.2.0",
+  "description": "dpub.jp のライブラリで講座を複数選択し、PARTを選んで、任意のフォルダに動画(HLS)を保存します。",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": [
+    "https://dpub.jp/*",
+    "https://*.wistia.com/*",
+    "https://*.wistia.net/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_popup": "popup.html", "default_title": "講座ダウンローダー" },
+  "content_scripts": [
+    {
+      "matches": ["https://dpub.jp/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
