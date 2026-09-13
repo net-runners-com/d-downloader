@@ -15,27 +15,59 @@
   button { font: inherit; color: #fff; background: #2563eb; border: 0; border-radius: 8px;
     padding: 9px 14px; cursor: pointer; font-weight: 600; }
   button.secondary { background: #1f2937; border: 1px solid #374151; }
+  button.small { padding: 6px 10px; font-size: 12px; }
   button:disabled { opacity: .5; cursor: default; }
+  select { font: inherit; color: #e5e7eb; background: #1f2937; border: 1px solid #374151; border-radius: 6px; padding: 5px 6px; }
+  header label { font-size: 12px; display: flex; gap: 6px; align-items: center; }
   #dir { font-size: 12px; opacity: .85; max-width: 40ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  main { padding: 16px 20px 80px; max-width: 900px; margin: 0 auto; }
-  .course { border: 1px solid #1f2937; border-radius: 12px; margin: 0 0 14px; overflow: hidden; }
-  .course > h2 { font-size: 14px; margin: 0; padding: 11px 14px; background: #111827; display: flex; gap: 10px; align-items: center; }
-  .course > h2 label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+  main { padding: 16px 20px 88px; max-width: 980px; margin: 0 auto; }
   .err { color: #f87171; font-weight: 600; }
-  .parts { padding: 6px 14px 12px; }
-  .part { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 7px 0; border-top: 1px dashed #1f2937; }
-  .part:first-child { border-top: 0; }
-  .part .t { min-width: 0; }
-  .part .t .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bar { height: 6px; background: #1f2937; border-radius: 9999px; overflow: hidden; margin-top: 4px; }
+
+  /* ---- tree ---- */
+  .row { display: grid; grid-template-columns: 22px 16px 1fr auto; gap: 9px; align-items: center; }
+  .row > .t { min-width: 0; }
+  .row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .caret { background: none; border: 0; padding: 0; margin: 0; width: 22px; height: 22px; color: #94a3b8;
+    font-size: 10px; line-height: 22px; text-align: center; cursor: pointer; transition: transform .12s; }
+  .caret::before { content: "\25BC"; }
+  .caret.leaf { visibility: hidden; cursor: default; }
+  .collapsed > .row > .caret { transform: rotate(-90deg); }
+  .collapsed > .body { display: none; }
+  input[type=checkbox] { width: 16px; height: 16px; margin: 0; accent-color: #2563eb; }
+
+  .course { border: 1px solid #1f2937; border-radius: 12px; margin: 0 0 14px; overflow: hidden; }
+  .course > .row { padding: 11px 14px; background: #111827; cursor: pointer; }
+  .course > .row b { font-size: 14px; }
+
+  .section > .row { padding: 8px 14px; background: #0f172a; border-top: 1px solid #1f2937; cursor: pointer; }
+  .section > .row .nm { font-size: 13px; font-weight: 600; }
+  .section > .body { margin: 2px 0 8px 26px; padding-left: 10px; border-left: 1px solid #233043; }
+  .course > .body > .parts { padding: 4px 14px 10px; }      /* course with no sections */
+
+  .item > .row { padding: 6px 14px 6px 0; }
+  .item > .row.novideo .name { opacity: .8; }
+  .item > .body { margin: 0 0 4px 32px; padding-left: 10px; border-left: 1px dashed #233043; }
+  .att.row { padding: 3px 14px 3px 0; font-size: 12px; }
+  .att .name { opacity: .85; }
+  .att .name::before { content: "\1F4C4  "; }
+
+  .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    padding: 40px 14px; font-size: 22px; font-weight: 700; letter-spacing: .04em; color: #cbd5e1; text-align: center; }
+  .loading .sub { font-size: 12px; font-weight: 400; letter-spacing: 0; opacity: .65; }
+  .spin { width: 30px; height: 30px; border-radius: 50%; border: 3px solid #1f2937; border-top-color: #2563eb;
+    animation: spin .9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .bar { height: 5px; background: #1f2937; border-radius: 9999px; overflow: hidden; margin-top: 4px; }
   .bar > i { display: block; height: 100%; width: 0; background: #22c55e; transition: width .15s; }
   .st { font-size: 11px; opacity: .75; white-space: nowrap; }
   .st.err { color: #f87171; opacity: 1; }
   .st.done { color: #22c55e; opacity: 1; }
-  input[type=checkbox] { width: 16px; height: 16px; accent-color: #2563eb; }
+  .tag { font-size: 11px; opacity: .6; white-space: nowrap; }
+  .docs { font-size: 11px; color: #93c5fd; opacity: .9; white-space: nowrap; }
   .note { opacity: .7; font-size: 12px; margin: 6px 0 16px; }
   footer { position: fixed; bottom: 0; left: 0; right: 0; background: #0b1220ee; border-top: 1px solid #1f2937;
-    padding: 12px 20px; display: flex; gap: 12px; align-items: center; justify-content: flex-end; }
+    padding: 10px 20px; display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
   #summary { margin-right: auto; font-size: 13px; opacity: .85; }
 </style>
 </head>
@@ -44,21 +76,32 @@
     <h1>講座ダウンローダー</h1>
     <button id="pick" class="secondary">保存先フォルダを選ぶ</button>
     <span id="dir">保存先: 未選択</span>
-    <label style="font-size:12px; display:flex; gap:6px; align-items:center;">形式
-      <select id="fmt" style="font:inherit; color:#e5e7eb; background:#1f2937; border:1px solid #374151; border-radius:6px; padding:5px 6px;">
+    <label>形式
+      <select id="fmt">
         <option value="mp4">MP4</option>
         <option value="ts">TS</option>
       </select>
     </label>
+    <label>フォルダ
+      <select id="split">
+        <option value="section">講座 / 章ごと</option>
+        <option value="flat">講座ごとのみ</option>
+      </select>
+    </label>
   </header>
   <main>
-    <p class="note">保存したいPARTにチェックを付け、保存先フォルダを選んで「ダウンロード開始」。フォルダ内に講座名のサブフォルダを作り、<b>.ts</b>（最高画質）で保存します。</p>
+    <p class="note">見出し（講座・章）をクリックで開閉、チェックは下の階層すべてに反映されます。保存先フォルダを選んで「ダウンロード開始」。<br>
+      資料があるPARTは <b>その動画タイトルのフォルダ</b> を作り、動画と資料をまとめて保存します。</p>
     <div id="list"></div>
   </main>
   <footer>
     <span id="summary"></span>
-    <button id="all" class="secondary">全選択</button>
-    <button id="none" class="secondary">全解除</button>
+    <button id="fold" class="secondary small">たたむ</button>
+    <button id="unfold" class="secondary small">展開</button>
+    <button id="vid" class="secondary small">動画のみ</button>
+    <button id="doc" class="secondary small">資料のみ</button>
+    <button id="all" class="secondary small">全選択</button>
+    <button id="none" class="secondary small">全解除</button>
     <button id="start" disabled>ダウンロード開始</button>
   </footer>
   <script src="vendor/mux.min.js"></script>
